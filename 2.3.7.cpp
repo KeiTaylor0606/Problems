@@ -5,36 +5,25 @@ using namespace std;
 using P = pair<int,int>;
 
 int n, m, M;
-int a[1000];
-int dp[1001][10001]; //DPテーブル
+int dp[1001][1001];  //DPテーブル
 
 void solve(){
-    //一つも選ばない方法は常に一通り
-    for(int i = 0; i <= n; i++){
-        dp[i][0] = 1;
-    }
-    for(int i = 0; i < n; i++){
-        for(int j = 1; j <= m; j++){
-            if(j - 1 - a[i] >= 0){
-                //引き算が含まれる場合には負の数にならないように注意する
-                dp[i + 1][j] = (dp[i + 1][j - 1] + dp[i][j] - dp[i][j - 1 - a[i]] + M) % M;
+    dp[0][0] = 1;
+    for(int i = 1; i <= m; i++){
+        for(int j = 0; j <= n; j++){
+            if(j - i >= 0){
+                dp[i][j] = (dp[i - 1][j] + dp[i][j - 1]) % M;
             }
             else{
-                dp[i + 1][j] = (dp[i + 1][j - 1] + dp[i][j]) % M;
+                dp[i][j] = dp[i - 1][j];
             }
         }
     }
-    printf("%d\n", dp[n][m]);
+    printf("%d\n", dp[m][n]);
 }
 
 int main(){
-    cin >> n >> m;
-    for(int i = 0; i < n; i++){
-        cin >> a[i];
-    }
-    cin >> M;
-    
+    cin >> n >> m >> M;
     solve();
-
     return 0;
 }
